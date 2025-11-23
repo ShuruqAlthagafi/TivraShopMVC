@@ -1,0 +1,116 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using TivraShopMVC.Data;
+using TivraShopMVC.Filters;
+using TivraShopMVC.Models;
+
+namespace TivraShopMVC.Controllers
+{
+    [SessionAuthorize]
+    public class ProductController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public ProductController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult Index()
+        {
+            IEnumerable<Product> Products = _context.Products.Include(c => c.Category).ToList();
+            return View(Products);
+        }
+        private void createList()
+        {
+            IEnumerable<Category> categories = _context.Categories.ToList();
+            SelectList selectListItems = new SelectList(categories, "Id", "Name");
+            ViewBag.Categories = selectListItems;
+
+
+
+            //IEnumerable<Category> categories = _context.Categories.ToList();
+            //ViewBag.Categories = categories;
+        }
+
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            createList();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Product product)
+        {
+            _context.Products.Add(product);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+
+            var product = _context.Products.Find(id);
+            createList();
+            return View(product);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Product product)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+
+                    return View(product);
+
+                }
+                _context.Products.Update(product);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                return Content("حدث خطا  غير متوقع يرجي مراجهة الدعم الفني:0565455252545");
+            }
+        }
+
+
+
+
+
+
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var product = _context.Products.Find(id);
+            return View(product);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Product product)
+        {
+            try
+            {
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                return Content("حدث خطا  غير متوقع يرجي مراجهة الدعم الفني:0565455252545");
+            }
+        }
+
+    }
+}

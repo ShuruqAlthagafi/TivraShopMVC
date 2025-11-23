@@ -1,0 +1,62 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Product</h1>
+<p>Product ID: @Model.Id</p>
+
+<form method="post" asp-action="Edit">
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Stock" class="form-label"></label>
+        <input asp-for="Stock" class="form-control" type="number" min="0" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ImageUrl" class="form-label"></label>
+        <input asp-for="ImageUrl" class="form-control" type="url" href="https://example.com/image.jpg" />
+    </div>
+
+
+    <div class="mb-3">
+        <label asp-for="CategoryId" class="form-label"></label>
+        <select asp-for="CategoryId" name="CategoryId" class="form-control" asp-items="@ViewBag.Categories">
+            <option disabled selected value="">-- Select Category --</option>
+
+        </select>
+
+
+        @*  <select asp-for="CategoryId" name="CategoryId" class="form-control">
+            <option selected value="">-- Select Category --</option>
+
+            @foreach (var category in ViewBag.Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+
+
+        </select> *@
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-outline-primary">Update</button>
+    <a asp-action="Index" class="btn btn-dark">Back</a>
+</form>
