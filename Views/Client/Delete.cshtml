@@ -5,7 +5,7 @@
 <h1>Delete Clientes</h1>
 
 <form method="post" asp-action="Delete">
-
+    @Html.AntiForgeryToken()
     <div class="mb-3">
         <label asp-for="FullName" class="form-label"></label>
         <input asp-for="FullName" class="form-control" />

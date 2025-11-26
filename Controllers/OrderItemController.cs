@@ -54,6 +54,7 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(OrderItem orders1)
         {
        
@@ -62,9 +63,9 @@ namespace TivraShopMVC.Controllers
                 return RedirectToAction("Index");
         }
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string Uid)
         {
-            var orders1 = _context.OrderItems.Find(id);
+            var orders1 = _context.OrderItems.FirstOrDefault(e=>e.Uid == Uid);
             if (orders1 == null)
                 return NotFound();
 
@@ -73,7 +74,8 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, OrderItem orders1)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, OrderItem orders1 )
         {
             try
             {
@@ -109,6 +111,7 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(OrderItem orderItems)
         {
             try

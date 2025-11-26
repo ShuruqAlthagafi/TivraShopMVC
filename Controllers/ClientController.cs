@@ -20,8 +20,22 @@ namespace TivraShopMVC.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Client> clients = _context.Clients.ToList();
-            return View(clients);
+            
+            try {
+
+                IEnumerable<Client> clients = _context.Clients.ToList();
+                //foreach (var item in clients)
+                //{
+                //    item.Uid = Guid.NewGuid().ToString();
+                //    _context.Clients.Update(item);
+                //    _context.SaveChanges();
+                //}
+                return View(clients);
+            }
+            catch (Exception ex)
+            {
+                return Content("حدث خطا  غير متوقع يرجي مراجهة الدعم الفني:0565455252545");
+            }
         }
 
 
@@ -34,6 +48,7 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Client client)
         {
             if (!ModelState.IsValid)
@@ -51,14 +66,15 @@ namespace TivraShopMVC.Controllers
 
 
         [HttpGet]
-        public IActionResult Edit(int Id)
+        public IActionResult Edit(string Uid)
         {
-            var clients = _context.Clients.Find(Id);
+            var clients = _context.Clients.FirstOrDefault(e=>e.Uid == Uid);
             return View(clients);
         }
 
         [HttpPost]
-        public IActionResult Edit(Client clients)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Client clients, string Uid)
         {
             try
             {
@@ -68,9 +84,20 @@ namespace TivraShopMVC.Controllers
                     return View(clients);
 
                 }
-                _context.Clients.Update(clients);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+
+                var cli = _context.Clients.FirstOrDefault(e => e.Uid == Uid);
+                if (cli != null)
+                {
+
+                   
+                    clients.FullName = cli.FullName;
+                    clients.Email = cli.Email;
+                    _context.Clients.Update(cli);
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(clients);
+
 
             }
             catch (Exception ex)
@@ -88,6 +115,7 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(Client client)
         {
             try

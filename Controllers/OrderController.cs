@@ -20,8 +20,22 @@ namespace TivraShopMVC.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Order> orders = _context.Orders.Include(c => c.Client).ToList();
-            return View(orders);
+           
+            try 
+            {
+                IEnumerable<Order> orders = _context.Orders.Include(c => c.Client).ToList();
+                //foreach ( var item in orders)
+                //{
+                //    item.Uid = Guid.NewGuid().ToString();
+                //    _context.Orders.Update(item);
+                //    _context.SaveChanges();
+                //}
+                return View(orders);
+            }
+            catch (Exception ex)
+            {
+                return Content("حدث خطا  غير متوقع يرجي مراجهة الدعم الفني:0565455252545");
+            }
         }
         private void createList()
         {
@@ -44,6 +58,7 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Order orders)
         {
             _context.Orders.Add(orders);
@@ -54,16 +69,17 @@ namespace TivraShopMVC.Controllers
 
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string Uid)
         {
 
-            var orders = _context.Orders.Find(id);
+            var orders = _context.Orders.FirstOrDefault(e=>e.Uid == Uid);
             createList();
             return View(orders);
         }
 
         [HttpPost]
-        public IActionResult Edit(Order orders)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Order orders , string Uid)
         {
             try
             {
@@ -73,9 +89,17 @@ namespace TivraShopMVC.Controllers
                     return View(orders);
 
                 }
-                _context.Orders.Update(orders);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                var ord = _context.Orders.FirstOrDefault(e => e.Uid == Uid);
+
+                if (ord != null)
+                {
+                    orders.OrderDate = ord.OrderDate;
+                    orders.Client = ord.Client;
+                    _context.Orders.Update(ord);
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+               return View(orders);
 
             }
             catch (Exception ex)
@@ -99,6 +123,7 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(Order order)
         {
             try

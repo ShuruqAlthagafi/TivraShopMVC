@@ -18,8 +18,23 @@ namespace TivraShopMVC.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Category> categories = _context.Categories.ToList();
-            return View(categories);
+            try {
+                IEnumerable<Category> categories = _context.Categories.ToList();
+                //foreach (var item in categories)
+                //{
+                //    item.Uid = Guid.NewGuid().ToString();
+                //    _context.Categories.Update(item);
+                //    _context.SaveChanges();
+                //}
+                return View(categories);
+
+            }
+            catch (Exception ex)
+            {
+                return Content("حدث خطا  غير متوقع يرجي مراجهة الدعم الفني:0565455252545");
+            }
+           
+
         }
 
         [HttpGet]
@@ -30,6 +45,7 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Category category)
         {
             _context.Categories.Add(category);
@@ -40,14 +56,16 @@ namespace TivraShopMVC.Controllers
 
 
         [HttpGet]
-        public IActionResult Edit(int Id)
+        public IActionResult Edit(string Uid)
         {
-            var category = _context.Categories.Find(Id);
+            var category = _context.Categories.FirstOrDefault(e=>e.Uid == Uid);
             return View(category);
         }
 
+        
         [HttpPost]
-        public IActionResult Edit(Category category)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Category category, string Uid)
         {
             try
             {
@@ -57,9 +75,19 @@ namespace TivraShopMVC.Controllers
                     return View(category);
 
                 }
-                _context.Categories.Update(category);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+
+                var cat = _context.Categories.FirstOrDefault(e => e.Uid == Uid);
+                if (cat != null)
+                {
+
+                    //category.Id = cat.Id;
+                    category.Name = cat.Name;
+                    category.Description = cat.Description;
+                    _context.Categories.Update(cat);
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(category);
 
             }
             catch (Exception ex)
@@ -77,6 +105,7 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(Category category)
         {
             try

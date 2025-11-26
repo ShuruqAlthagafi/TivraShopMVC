@@ -6,7 +6,7 @@ namespace TivraShopMVC.Models
     public class Order
     {
         public int Id { get; set; }
-
+        public string Uid { get; set; } = Guid.NewGuid().ToString();
         [ForeignKey("Client")]
         public int ClientId { get; set; }
         public Client? Client { get; set; }

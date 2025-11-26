@@ -33,7 +33,7 @@
                     <td>@orderItem.UnitPrice.ToString("N2") SAR</td>
                     <td>@($"{orderItem.Quantity * orderItem.UnitPrice:N2} SAR")</td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@orderItem.Id" class="btn btn-sm btn-outline-warning">Edit</a>
+                        <a asp-action="Edit" asp-route-Uid="@orderItem.Uid" class="btn btn-sm btn-outline-warning">Edit</a>
                         <a asp-action="Delete" asp-route-id="@orderItem.Id" class="btn btn-sm btn-outline-danger">Delete</a>
                     </td>
                 </tr>

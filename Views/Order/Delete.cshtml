@@ -6,7 +6,7 @@
 <h1>Delete</h1>
 
 <form method="post" asp-action="Delete">
-
+    @Html.AntiForgeryToken()
     <div class="mb-3">
         <label asp-for="ClientId" class="form-label"></label>
         <select asp-for="ClientId" class="form-control" asp-items="@ViewBag.clients">

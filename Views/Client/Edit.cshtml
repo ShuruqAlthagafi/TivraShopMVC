@@ -6,7 +6,8 @@
 <h1>Edit Clients</h1>
 
 <form method="post" asp-action="Edit">
-
+    @Html.AntiForgeryToken()
+    <input asp-for="Uid" hidden name="Uid" class="form-control" />
     <div class="mb-3">
         <label asp-for="FullName" class="form-label"></label>
         <input asp-for="FullName" class="form-control" />

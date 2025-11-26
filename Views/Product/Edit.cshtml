@@ -8,7 +8,8 @@
 <p>Product ID: @Model.Id</p>
 
 <form method="post" asp-action="Edit">
-
+    @Html.AntiForgeryToken()
+    <input asp-for="Uid" hidden name="Uid" class="form-control" />
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>
         <input asp-for="Name" class="form-control" />

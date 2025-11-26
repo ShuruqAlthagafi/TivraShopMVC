@@ -6,7 +6,8 @@
 <h1>Edit Order</h1>
 
 <form method="post" asp-action="Edit">
-
+    @Html.AntiForgeryToken()
+    <input asp-for="Uid" hidden name="Uid" class="form-control" />
     <div class="mb-3">
         <label asp-for="ClientId" class="form-label"></label>
         <select asp-for="ClientId" class="form-control" asp-items="@ViewBag.clients">

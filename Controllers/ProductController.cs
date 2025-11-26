@@ -19,8 +19,22 @@ namespace TivraShopMVC.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> Products = _context.Products.Include(c => c.Category).ToList();
-            return View(Products);
+          
+            try
+            {
+                IEnumerable<Product> Products = _context.Products.Include(c => c.Category).ToList();
+                //foreach ( var item in Products)
+                //{
+                //    item.Uid = Guid.NewGuid().ToString();
+                //    _context.Products.Update(item);
+                //    _context.SaveChanges();
+                //}
+                return View(Products);
+            }
+            catch (Exception ex)
+            {
+                return Content("حدث خطا  غير متوقع يرجي مراجهة الدعم الفني:0565455252545");
+            }
         }
         private void createList()
         {
@@ -43,6 +57,7 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Product product)
         {
             _context.Products.Add(product);
@@ -53,16 +68,17 @@ namespace TivraShopMVC.Controllers
 
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string Uid)
         {
 
-            var product = _context.Products.Find(id);
+            var product = _context.Products.FirstOrDefault(e=>e.Uid == Uid);
             createList();
             return View(product);
         }
 
         [HttpPost]
-        public IActionResult Edit(Product product)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Product product , string Uid)
         {
             try
             {
@@ -72,9 +88,17 @@ namespace TivraShopMVC.Controllers
                     return View(product);
 
                 }
-                _context.Products.Update(product);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                var pro = _context.Products.AsNoTracking().FirstOrDefault(e => e.Uid == Uid);
+
+                if (pro != null)
+                {
+                    product.Name = pro.Name;
+                    product.Description = pro.Description;
+                    _context.Products.Update(pro);
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(product);
 
             }
             catch (Exception ex)
@@ -97,6 +121,7 @@ namespace TivraShopMVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(Product product)
         {
             try

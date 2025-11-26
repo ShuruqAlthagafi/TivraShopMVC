@@ -6,7 +6,7 @@
 <h1>Delete Product</h1>
 
 <form method="post" asp-action="Delete">
-
+    @Html.AntiForgeryToken()
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>
         <input asp-for="Name" disabled name="Name" class="form-control" />
