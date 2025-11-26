@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TivraShopMVC.Data;
+using TivraShopMVC.Interfaces;
+using TivraShopMVC.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options
 .UseSqlServer(connectionString));
 
 
-
+builder.Services.AddScoped(typeof(IRepository<>), typeof(MainRepository<>));
 
 
 var app = builder.Build();

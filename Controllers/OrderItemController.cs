@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TivraShopMVC.Data;
 using TivraShopMVC.Filters;
+using TivraShopMVC.Interfaces;
 using TivraShopMVC.Models;
 
 namespace TivraShopMVC.Controllers
@@ -12,6 +13,11 @@ namespace TivraShopMVC.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        //private readonly IRepository<OrderItem> _repositoryOrderItem;
+        //public OrderItemController(IRepository<OrderItem> repository)
+        //{
+        //    _repositoryCategory = repository;
+        //}
         public OrderItemController(ApplicationDbContext context)
         {
             _context = context;
